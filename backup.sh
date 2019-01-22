@@ -17,13 +17,13 @@ fi
 CURRENT_DATE=$(date -u +"%Y-%m-%dT%H%M%SZ")
 BACKUP_SET="$BACKUP_NAME-$CURRENT_DATE"
 
-#echo "Activating google credentials before beginning"
-#gcloud auth activate-service-account --key-file "$GOOGLE_APPLICATION_CREDENTIALS"
+echo "Activating google credentials before beginning"
+gcloud auth activate-service-account --key-file "$GOOGLE_APPLICATION_CREDENTIALS"
 
-#if [ $? -ne 0 ] ; then
-    #echo "Credentials failed; no way to copy to google."
-    #echo "Ensure GOOGLE_APPLICATION_CREDENTIALS is appropriately set."
-#fi
+if [ $? -ne 0 ] ; then
+    echo "Credentials failed; no way to copy to google."
+    echo "Ensure GOOGLE_APPLICATION_CREDENTIALS is appropriately set."
+fi
 
 echo "=============== Couchbase Backup ==============================="
 echo "Beginning backup from $COUCHBASE_HOST to /data/$BACKUP_SET"
@@ -44,7 +44,7 @@ gzip -9 "/data/$BACKUP_SET.tar"
 echo "Zipped backup size:"
 du -hs "/data/$BACKUP_SET.tar.gz"
 
-#echo "Pushing /data/$BACKUP_SET.tar.gz -> $GCS_BUCKET"
-#gsutil cp "/data/$BACKUP_SET.tar.gz" "$GCS_BUCKET"
+echo "Pushing /data/$BACKUP_SET.tar.gz -> $GCS_BUCKET"
+gsutil cp "/data/$BACKUP_SET.tar.gz" "$GCS_BUCKET"
 
 exit $?
